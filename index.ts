@@ -99,11 +99,7 @@ async function getVideoMeta(url: string) {
   try {
     ytdl.getURLVideoID(url)
 
-    const info = await ytdl.getInfo(url, {
-      requestOptions: {
-        // headers,
-      }
-    })
+    const info = await ytdl.getInfo(url)
 
     const bestFormat = maxBy(info.formats.filter((i) => i.hasAudio), (i) => +(i.audioSampleRate || 0))
     if (!bestFormat || !bestFormat.audioSampleRate) throw new Error('no_format_found')
@@ -199,7 +195,7 @@ async function downloadAudioclip() {
       source: {
         url: videoMeta.url,
         startTime: record.startTime,
-        title: record.title,
+        title: videoMeta.title,
       },
       contributor: {
         name: record.author,
