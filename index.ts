@@ -10,6 +10,7 @@ import sanitizeFilename from 'sanitize-filename'
 import ytdl from 'ytdl-core'
 
 require('dotenv').config()
+const parseTime = require('m3u8stream/dist/parse-time');
 
 const q = fauna.query
 
@@ -101,7 +102,7 @@ async function getVideoMeta(url: string) {
 
     const info = await ytdl.getInfo(url)
 
-    const bestFormat = maxBy(info.formats.filter((i) => i.hasAudio), (i) => +(i.audioSampleRate || 0))
+    const bestFormat = maxBy(info.formats.filter((i) => i.hasAudio && i.hasVideo), (i) => +(i.audioSampleRate || 0))
     if (!bestFormat || !bestFormat.audioSampleRate) throw new Error('no_format_found')
 
     return {
@@ -131,10 +132,12 @@ interface IDownloadAndEncodeOptions {
 }
 
 function downloadAndEncode({ url, startTime, duration, output }: IDownloadAndEncodeOptions) {
+  if (startTime) {
+    url += `&begin=${parseTime.humanStr(startTime)}`
+  }
   shell.exec(shellescape([
     FFMPEG, '-hide_banner', '-nostdin',
     '-i', url,
-    ...(startTime ? ['-ss', startTime] : []),
     ...(duration ? ['-t', duration] : []),
     '-vn',
     '-c:a', 'libmp3lame',

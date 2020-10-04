@@ -10,6 +10,7 @@
     "faunadb": "^3.0.1",
     "ffmpeg-static": "^4.2.7",
     "lodash": "^4.17.20",
+    "m3u8stream": "^0.7.1",
     "md5": "^2.3.0",
     "sanitize-filename": "^1.6.3",
     "shell-escape": "^0.2.0",
