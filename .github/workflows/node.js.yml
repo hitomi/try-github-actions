@@ -25,3 +25,7 @@ jobs:
       env:
         FAUNA_COLLECTION: ${{ secrets.FAUNA_COLLECTION }}
         FAUNA_SECERT: ${{ secrets.FAUNA_SECERT }}
+    - uses: actions/upload-artifact@v2
+      with:
+        name: audioclips
+        path: .temp/
